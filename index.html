@@ -3,146 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ho ho hooooo</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
+    <title>Hohoohoooo>Hohooho
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        /* --- CẤU HÌNH --- */
+        /* --- CẤU HÌNH CHUNG --- */
         body {
-            margin: 0;
-            padding: 0;
-            background: #090A0F;
-            overflow: hidden;
-            height: 100vh;
-            font-family: 'Quicksand', sans-serif;
+            margin: 0; padding: 0; background: #000; overflow: hidden; height: 100vh; font-family: 'Quicksand', sans-serif;
         }
-
-        /* Canvas vẽ cây và nền - Nằm dưới cùng */
         #canvas-world {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;
         }
-
-        /* --- LỚP GIAO DIỆN (LỜI CHÚC + ẢNH) --- */
+        #transition-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 5; opacity: 0; pointer-events: none; transition: opacity 1.5s ease-in-out;
+        }
         .ui-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            pointer-events: none;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: flex; flex-direction: column; pointer-events: none; opacity: 0; transition: opacity 3s ease-in-out;
         }
-
-        .top-section {
-            flex: 7;
-            display: flex;
+        .ui-layer.visible { opacity: 1; pointer-events: auto; }
+        #start-container {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 20; text-align: center; transition: opacity 1s;
         }
-
-        .bottom-section {
-            flex: 3;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 40px; /* Tăng khoảng cách giữa các ảnh */
-            padding-top: 20px;
-            pointer-events: auto;
+        .heart-btn {
+            background: rgba(255, 105, 180, 0.1); border: 1px solid rgba(255, 105, 180, 0.5); color: #fff; padding: 12px 25px; font-size: 1.3em; font-family: 'Dancing Script', cursive; border-radius: 50px; cursor: pointer; box-shadow: 0 0 10px rgba(255, 105, 180, 0.3); animation: pulse 2s infinite; outline: none; backdrop-filter: blur(2px);
         }
-
-        .left-col-spacer { flex: 1; } 
-        .right-col-content { 
-            flex: 1; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-        }
-
-        /* --- THIỆP CHÚC --- */
+        .heart-btn:hover { background: rgba(255, 105, 180, 0.4); }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        
+        /* --- THIỆP & ẢNH --- */
+        .top-section { flex: 7; display: flex; }
+        .bottom-section { flex: 3; display: flex; justify-content: center; align-items: flex-start; gap: 40px; padding-top: 20px; pointer-events: auto; }
+        .left-col-spacer { flex: 1; } .right-col-content { flex: 1; display: flex; justify-content: center; align-items: center; }
         .greeting-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(5px);
-            padding: 40px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 105, 180, 0.3);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-            text-align: center;
-            max-width: 450px;
-            margin-right: 50px;
-            /* Đẩy thiệp lên một chút để tránh cây nếu màn hình hẹp */
-            transform: translateY(-20px); 
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(5px); padding: 40px; border-radius: 20px; border: 1px solid rgba(255, 105, 180, 0.2); box-shadow: 0 10px 40px rgba(0,0,0,0.8); text-align: center; max-width: 450px; margin-right: 50px; transform: translateY(-20px); 
         }
-
         h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 4em;
-            margin: 0;
-            background: linear-gradient(to right, #ff9a9e, #fad0c4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(255, 105, 180, 0.4);
+            font-family: 'Dancing Script', cursive; font-size: 4em; margin: 0; background: linear-gradient(to right, #ff9a9e, #fad0c4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
         }
-
-        p { color: #eee; font-size: 1.2em; margin-top: 15px; }
-
-        /* --- KHUNG ẢNH GỖ --- */
+        p { color: #ccc; font-size: 1.1em; margin-top: 15px; font-weight: 300; line-height: 1.6; }
         .frame {
-            position: relative;
-            width: 130px; height: 160px;
-            /* Tạo hiệu ứng vân gỗ bằng gradient */
-            background: repeating-linear-gradient(
-                45deg,
-                #6b4423,
-                #6b4423 10px,
-                #855e42 10px,
-                #855e42 20px
-            );
-            border: 6px solid #4a2e17; /* Viền gỗ đậm */
-            padding: 5px; /* Bo viền trong */
-            box-shadow: 0 10px 25px rgba(0,0,0,0.7), inset 0 0 10px rgba(0,0,0,0.5);
-            transform-origin: top center;
-            animation: swing 3s ease-in-out infinite alternate;
-            border-radius: 4px;
+            position: relative; width: 130px; height: 160px; background: repeating-linear-gradient(45deg, #5c3a1e, #5c3a1e 10px, #754d33 10px, #754d33 20px); border: 4px solid #3e2714; padding: 4px; box-shadow: 0 10px 20px rgba(0,0,0,0.8); transform-origin: top center; animation: swing 4s ease-in-out infinite alternate; border-radius: 3px;
         }
-
-        /* Dây thừng treo */
         .frame::before {
-            content: ''; position: absolute; top: -80px; left: 50%;
-            width: 3px; height: 80px; 
-            /* Màu dây thừng */
-            background: repeating-linear-gradient(to bottom, #c2b280, #c2b280 5px, #a09060 5px, #a09060 10px);
-            transform: translateX(-50%);
+            content: ''; position: absolute; top: -80px; left: 50%; width: 2px; height: 80px; background: rgba(200, 200, 200, 0.3); transform: translateX(-50%);
         }
-        
         .frame:hover { transform: scale(1.1) rotate(0deg) !important; z-index: 100; animation-play-state: paused; }
-        
-        .frame img { 
-            width: 100%; height: 100%; object-fit: cover;
-            border: 2px solid #d4c4a8; /* Viền sáng bên trong ảnh */
-        }
-        
+        .frame img { width: 100%; height: 100%; object-fit: cover; border: 1px solid rgba(255,255,255,0.2); }
         .frame:nth-child(1) { animation-delay: 0s; transform: rotate(-2deg); }
         .frame:nth-child(2) { animation-delay: 1s; transform: rotate(1deg); }
         .frame:nth-child(3) { animation-delay: 0.5s; transform: rotate(2deg); }
-
-        @keyframes swing { from {transform: rotate(3deg);} to {transform: rotate(-3deg);} }
-
+        @keyframes swing { from {transform: rotate(2deg);} to {transform: rotate(-2deg);} }
         @media(max-width: 768px) {
-            .top-section { flex-direction: column; }
-            .greeting-card { margin: 0; transform: translateY(0); margin-top: 350px; /* Đẩy xuống dưới cây trên mobile */ }
-            .bottom-section { flex-wrap: wrap; padding-bottom: 50px;}
+            .top-section { flex-direction: column; } .greeting-card { margin: 0; transform: translateY(0); margin-top: 350px; } .bottom-section { flex-wrap: wrap; padding-bottom: 50px;}
         }
     </style>
 </head>
 <body>
-
     <canvas id="canvas-world"></canvas>
+    
+    <audio id="bg-music" loop>
+        <source src="audio.mp3" type="audio/mpeg">
+    </audio>
 
-    <div class="ui-layer">
+    <div id="transition-overlay"></div>
+    <div id="start-container"><button class="heart-btn" onclick="triggerMagic()">Yêu anh thì bấm dô nàh ❤️</button></div>
+    
+    <div class="ui-layer" id="main-ui">
         <div class="top-section">
             <div class="left-col-spacer"></div>
             <div class="right-col-content">
@@ -153,26 +78,26 @@
                 </div>
             </div>
         </div>
-
         <div class="bottom-section">
-            <div class="frame"><img src="anh1.jpeg"></div>
-            <div class="frame"><img src="anh2.png"></div>
-            <div class="frame"><img src="anh3.jpeg"></div>
+            <div class="frame"><img src="anh1.jpeg" alt="Ảnh 1"></div>
+            <div class="frame"><img src="anh2.png" alt="Ảnh 2"></div>
+            <div class="frame"><img src="anh3.jpeg" alt="Ảnh 3"></div>
         </div>
     </div>
 
     <script>
         const canvas = document.getElementById('canvas-world');
         const ctx = canvas.getContext('2d');
-
-        let width, height;
-        let particles = [];
-        let snow = [];
-
-        // CẤU HÌNH MỚI
-        const TREE_COUNT = 10000; // 10,000 điểm
-        const TREE_COLORS = ['#FFC0CB', '#FFB6C1', '#FF69B4', '#FF1493', '#DB7093', '#FFFFFF'];
+        const overlay = document.getElementById('transition-overlay');
+        let width, height, particles = [], snow = [], ornaments = [];
         
+        const TEXT_SEQUENCE = ["Đàooo", "eooo", "boàaa lozzz", "nhiều lắmm"];
+        const TEXT_COLORS = ["#FFD700", "#FF69B4", "#87CEEB", "#98FB98"];
+        let currentTextIndex = 0;
+        let currentColor = "#fff";
+
+        let appState = 0; 
+
         function resize() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
@@ -180,118 +105,230 @@
         window.addEventListener('resize', resize);
         resize();
 
+        function getTextPoints(text) {
+            const offCanvas = document.createElement('canvas');
+            offCanvas.width = width; offCanvas.height = height;
+            const offCtx = offCanvas.getContext('2d');
+            let fontSize = 120; if(text.length > 8) fontSize = 80;
+            offCtx.font = `bold ${fontSize}px 'Quicksand', sans-serif`;
+            offCtx.fillStyle = "white"; offCtx.textAlign = "center"; offCtx.textBaseline = "middle";
+            offCtx.fillText(text, width/2, height/2);
+            const imageData = offCtx.getImageData(0, 0, width, height).data;
+            let points = [];
+            // Quét điểm ảnh dày hơn (bước nhảy 3)
+            for (let y = 0; y < height; y += 3) {
+                for (let x = 0; x < width; x += 3) {
+                    if (imageData[(y * width + x) * 4 + 3] > 128) points.push({x, y});
+                }
+            }
+            return points;
+        }
+
+        function initIntroParticles() {
+            particles = [];
+            for(let i=0; i<4000; i++) {
+                particles.push({
+                    x: Math.random() * width, y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
+                    size: Math.random() * 1.5, targetX: 0, targetY: 0
+                });
+            }
+        }
+
+        function triggerMagic() {
+            // XỬ LÝ NÚT VÀ NHẠC
+            document.getElementById('start-container').style.opacity = '0';
+            setTimeout(() => document.getElementById('start-container').remove(), 1000);
+            
+            // BẮT ĐẦU PHÁT NHẠC
+            const music = document.getElementById('bg-music');
+            music.volume = 0.5; // Âm lượng 50%
+            music.play().catch(e => console.log("Cần tương tác để phát nhạc: " + e));
+
+            // PHASE 1: SAO BĂNG
+            appState = 1;
+            particles.forEach(p => {
+                if (Math.random() > 0.95) { 
+                    p.isMeteor = true;
+                    p.x = Math.random() * width + 200; p.y = -100;
+                    p.vx = -1 - Math.random() * 1.5; 
+                    p.vy = 1 + Math.random() * 1.5;
+                } else {
+                    p.isMeteor = false; p.vx = (Math.random() - 0.5)*0.2; p.vy = (Math.random() - 0.5)*0.2;
+                }
+            });
+
+            // CHỜ 5 GIÂY (Sao rơi hết) MỚI XẾP CHỮ
+            setTimeout(() => { 
+                particles.forEach(p => { p.isMeteor = false; p.vx *= 0.1; p.vy *= 0.1; });
+                appState = 2; 
+                nextText(); 
+            }, 5000);
+        }
+
+        function nextText() {
+            if (currentTextIndex >= TEXT_SEQUENCE.length) { finishSequence(); return; }
+            const text = TEXT_SEQUENCE[currentTextIndex];
+            currentColor = TEXT_COLORS[currentTextIndex]; 
+            const points = getTextPoints(text);
+            
+            particles.forEach((p, i) => {
+                if (i < points.length) {
+                    p.active = true; p.targetX = points[i].x; p.targetY = points[i].y;
+                } else {
+                    p.active = false; 
+                    p.targetX = Math.random() * width; p.targetY = Math.random() * height;
+                }
+            });
+            currentTextIndex++;
+            setTimeout(nextText, 2500);
+        }
+
+        function finishSequence() {
+            appState = 3;
+            particles.forEach(p => { p.vx = (Math.random() - 0.5) * 3; p.vy = (Math.random() - 0.5) * 3; });
+            overlay.style.opacity = '1';
+            setTimeout(() => {
+                appState = 4; initTree(); initOrnaments(); initSnow(); 
+                overlay.style.opacity = '0';
+                setTimeout(() => document.getElementById('main-ui').classList.add('visible'), 500); 
+            }, 1500);
+        }
+
+        const TREE_COLORS = ['#ffc4d6', '#ff99ac', '#f6e4f6', '#ffffff', '#fff1c1', '#fcf6bd'];
+
         function initTree() {
             particles = [];
-            for(let i=0; i<TREE_COUNT; i++) {
-                const h = Math.random(); 
-                const r_max_at_h = 200 * h; // Tán cây rộng hơn chút (200px)
+            for(let i=0; i<8000; i++) {
+                const h = Math.random(); const r = (220 * h) * Math.sqrt(Math.random());
                 const angle = Math.random() * Math.PI * 2;
-                const r = r_max_at_h * Math.sqrt(Math.random());
-
-                const x = r * Math.cos(angle);
-                const z = r * Math.sin(angle);
-                // Tăng chiều cao cây lên 550px (thay vì 450px cũ)
-                const y = h * 550 - 275; 
-
                 particles.push({
-                    x: x, y: y, z: z,
+                    x: r * Math.cos(angle), y: h * 550 - 275, z: r * Math.sin(angle),
                     color: TREE_COLORS[Math.floor(Math.random() * TREE_COLORS.length)],
-                    // Kích thước nhỏ lại để mịn hơn khi mật độ cao
-                    size: Math.random() * 1.8 + 0.5, 
-                    blinkOffset: Math.random() * 100,
-                    // Tốc độ nhấp nháy nhanh hơn chút
-                    blinkSpeed: 0.1 + Math.random() * 0.2 
+                    size: Math.random() * 1.5 + 0.5, blinkOffset: Math.random()*100, blinkSpeed: 0.1+Math.random()*0.2 
+                });
+            }
+        }
+        
+        function initOrnaments() {
+            ornaments = [];
+            const types = ['gift', 'bauble', 'candy'];
+            const colors = ['#ff0000', '#ffd700', '#00ff00', '#00ffff', '#ff00ff'];
+            for(let i=0; i<200; i++) { 
+                const h = Math.random() * 0.9 + 0.05; 
+                const r = 210 * h; 
+                const angle = Math.random() * Math.PI * 2;
+                ornaments.push({
+                    x: r * Math.cos(angle), y: h * 550 - 275, z: r * Math.sin(angle),
+                    type: types[Math.floor(Math.random() * types.length)],
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    size: Math.random() * 4 + 3
                 });
             }
         }
 
         function initSnow() {
             snow = [];
-            for(let i=0; i<250; i++) { // Nhiều tuyết hơn
-                snow.push({
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    size: Math.random() * 3 + 1,
-                    speed: Math.random() * 2 + 1
-                });
-            }
+            for(let i=0; i<200; i++) snow.push({x: Math.random()*width, y: Math.random()*height, size: Math.random()*2+1, speed: Math.random()*1.5+0.5});
         }
 
-        initTree();
-        initSnow();
+        initIntroParticles();
 
         function animate() {
-            // Vẽ nền
-            const gradient = ctx.createRadialGradient(width/2, height, 0, width/2, height, height);
-            gradient.addColorStop(0, "#2a1a21"); // Nền hơi ám hồng tối
-            gradient.addColorStop(1, "#090A0F");
-            ctx.fillStyle = gradient;
+            ctx.fillStyle = (appState < 4) ? "rgba(0, 0, 0, 0.25)" : "#090A0F"; 
+            if(appState === 4) {
+                 const gradient = ctx.createRadialGradient(width/2, height, 0, width/2, height, height);
+                 gradient.addColorStop(0, "#2a1a21"); gradient.addColorStop(1, "#090A0F"); ctx.fillStyle = gradient;
+            }
             ctx.fillRect(0, 0, width, height);
-
             const time = Date.now() / 1000;
 
-            // VỊ TRÍ TÂM CÂY MỚI (Thấp hơn)
-            const cx = width * 0.25; 
-            const cy = height * 0.45; // Dời xuống 65% chiều cao màn hình (cũ là 55%)
+            if (appState === 1) { // METEOR
+                particles.forEach(p => {
+                    if (p.isMeteor) {
+                        p.x += p.vx; p.y += p.vy;
+                        const grad = ctx.createLinearGradient(p.x, p.y, p.x - p.vx*6, p.y - p.vy*6);
+                        grad.addColorStop(0, "rgba(255, 215, 100, 0.8)"); grad.addColorStop(1, "rgba(255, 215, 100, 0)");
+                        ctx.strokeStyle = grad; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x-p.vx*6, p.y-p.vy*6); ctx.stroke();
+                        
+                        ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI*2);
+                        ctx.fillStyle = "#fff700"; ctx.shadowColor = "#ffd700"; ctx.shadowBlur = 10; ctx.fill(); ctx.shadowBlur = 0;
 
-            // Vẽ 10000 điểm
-            particles.forEach(p => {
-                // Hiệu ứng lung linh: Dao động từ 0.3 (mờ) đến 1.0 (sáng rực)
-                let alpha = 0.3 + 0.7 * Math.abs(Math.sin(time * p.blinkSpeed + p.blinkOffset));
-                
-                // Xoay nhẹ cây
-                const rotSpeed = 0.15;
-                const rx = p.x * Math.cos(time * rotSpeed) - p.z * Math.sin(time * rotSpeed);
-                // const rz = p.x * Math.sin(time * rotSpeed) + p.z * Math.cos(time * rotSpeed); // Không cần thiết cho 2D projection đơn giản
-                
-                ctx.globalAlpha = alpha;
-                ctx.fillStyle = p.color;
-                ctx.beginPath();
-                // Vẽ hình tròn nhỏ
-                ctx.arc(cx + rx, cy + p.y, p.size, 0, Math.PI * 2);
-                ctx.fill();
-            });
-
-            // Vẽ ngôi sao (Dời vị trí theo tâm cây mới)
-            ctx.globalAlpha = 1;
-            // Đỉnh cây là -275, nên sao nằm khoảng -290 so với tâm
-            drawStar(cx, cy - 290, 5, 35, 18); 
-
-            // Vẽ tuyết
-            ctx.fillStyle = "#FFF";
-            snow.forEach(s => {
-                s.y += s.speed;
-                if(s.y > height) s.y = -10;
-                ctx.globalAlpha = 0.6;
-                ctx.beginPath();
-                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-                ctx.fill();
-            });
-
+                        if (p.y > height+100 || p.x < -100) { p.x = Math.random() * width + 200; p.y = -100; }
+                    } else {
+                         p.x += p.vx; p.y += p.vy;
+                         if(p.x < 0) p.x = width; if(p.x > width) p.x = 0;
+                         if(p.y < 0) p.y = height; if(p.y > height) p.y = 0;
+                        ctx.fillStyle = "rgba(255,255,255,0.3)"; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+                    }
+                });
+            }
+            else if (appState === 2) { // TEXT
+                particles.forEach(p => {
+                    if (p.active) {
+                        p.x += (p.targetX - p.x) * 0.1; p.y += (p.targetY - p.y) * 0.1;
+                        ctx.fillStyle = currentColor; 
+                        ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+                    } else {
+                        ctx.fillStyle = "rgba(255,255,255,0.02)"; 
+                        ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+                    }
+                });
+            }
+            else if (appState === 3) { // TRANSITION
+                particles.forEach(p => {
+                    p.x += p.vx; p.y += p.vy;
+                    ctx.fillStyle = currentColor; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+                });
+            }
+            else if (appState === 4) { // MAIN
+                const cx = width * 0.25; const cy = height * 0.45; const rotSpeed = 0.15;
+                particles.forEach(p => {
+                    let alpha = 0.3 + 0.7 * Math.abs(Math.sin(time * p.blinkSpeed + p.blinkOffset));
+                    const rx = p.x * Math.cos(time*rotSpeed) - p.z * Math.sin(time*rotSpeed);
+                    ctx.globalAlpha = alpha; ctx.fillStyle = p.color;
+                    ctx.beginPath(); ctx.arc(cx + rx, cy + p.y, p.size, 0, Math.PI * 2); ctx.fill();
+                });
+                ctx.globalAlpha = 1;
+                ornaments.forEach(o => {
+                    const rx = o.x * Math.cos(time*rotSpeed) - o.z * Math.sin(time*rotSpeed);
+                    const rz = o.x * Math.sin(time*rotSpeed) + o.z * Math.cos(time*rotSpeed); 
+                    if(rz > -50) {
+                        const finalX = cx + rx; const finalY = cy + o.y;
+                        ctx.fillStyle = o.color;
+                        ctx.beginPath();
+                        if(o.type === 'gift') { 
+                            ctx.fillRect(finalX - o.size, finalY - o.size, o.size*2, o.size*2);
+                        } else if (o.type === 'bauble') { 
+                            ctx.arc(finalX, finalY, o.size, 0, Math.PI*2); ctx.fill();
+                        } else if (o.type === 'candy') { 
+                            ctx.strokeStyle = o.color; ctx.lineWidth = 3;
+                            ctx.moveTo(finalX, finalY-o.size); ctx.lineTo(finalX, finalY+o.size);
+                            ctx.arc(finalX-3, finalY+o.size, 3, 0, Math.PI, false); ctx.stroke();
+                        }
+                    }
+                });
+                drawStar(cx, cy - 290, 5, 35, 18);
+                ctx.fillStyle = "#FFF";
+                snow.forEach(s => { s.y += s.speed; if(s.y > height) s.y = -10; ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2); ctx.fill(); });
+            }
+            if(appState === 0) { 
+                 particles.forEach(p => { 
+                     p.x += p.vx; p.y += p.vy;
+                     if(p.x < 0) p.x = width; if(p.x > width) p.x = 0;
+                     if(p.y < 0) p.y = height; if(p.y > height) p.y = 0;
+                     ctx.fillStyle = "rgba(255,255,255,0.5)"; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill(); 
+                 });
+            }
             requestAnimationFrame(animate);
         }
 
-        // Hàm vẽ ngôi sao phát sáng
         function drawStar(cx, cy, spikes, outerRadius, innerRadius) {
-            let rot = Math.PI / 2 * 3;
-            let x = cx; let y = cy; let step = Math.PI / spikes;
-            ctx.beginPath();
-            ctx.moveTo(cx, cy - outerRadius);
-            for (let i = 0; i < spikes; i++) {
-                x = cx + Math.cos(rot) * outerRadius; y = cy + Math.sin(rot) * outerRadius;
-                ctx.lineTo(x, y); rot += step;
-                x = cx + Math.cos(rot) * innerRadius; y = cy + Math.sin(rot) * innerRadius;
-                ctx.lineTo(x, y); rot += step;
-            }
-            ctx.lineTo(cx, cy - outerRadius);
-            ctx.closePath();
-            ctx.fillStyle = '#FFD700';
-            ctx.shadowColor = '#FFD700';
-            ctx.shadowBlur = 30; // Phát sáng mạnh hơn
-            ctx.fill();
-            ctx.shadowBlur = 0;
+            let rot = Math.PI/2*3; let x = cx; let y = cy; let step = Math.PI/spikes;
+            ctx.beginPath(); ctx.moveTo(cx, cy - outerRadius);
+            for (let i=0; i<spikes; i++) { x = cx + Math.cos(rot)*outerRadius; y = cy + Math.sin(rot)*outerRadius; ctx.lineTo(x, y); rot += step; x = cx + Math.cos(rot)*innerRadius; y = cy + Math.sin(rot)*innerRadius; ctx.lineTo(x, y); rot += step; }
+            ctx.lineTo(cx, cy - outerRadius); ctx.closePath(); ctx.fillStyle = '#FFD700'; ctx.shadowColor = '#FFD700'; ctx.shadowBlur = 30; ctx.fill(); ctx.shadowBlur = 0;
         }
-
         animate();
     </script>
 </body>
