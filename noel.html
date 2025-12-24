@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ho ho hooooo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        /* --- CẤU HÌNH --- */
+        body {
+            margin: 0;
+            padding: 0;
+            background: #090A0F;
+            overflow: hidden;
+            height: 100vh;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        /* Canvas vẽ cây và nền - Nằm dưới cùng */
+        #canvas-world {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* --- LỚP GIAO DIỆN (LỜI CHÚC + ẢNH) --- */
+        .ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            pointer-events: none;
+        }
+
+        .top-section {
+            flex: 7;
+            display: flex;
+        }
+
+        .bottom-section {
+            flex: 3;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 40px; /* Tăng khoảng cách giữa các ảnh */
+            padding-top: 20px;
+            pointer-events: auto;
+        }
+
+        .left-col-spacer { flex: 1; } 
+        .right-col-content { 
+            flex: 1; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+        }
+
+        /* --- THIỆP CHÚC --- */
+        .greeting-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            text-align: center;
+            max-width: 450px;
+            margin-right: 50px;
+            /* Đẩy thiệp lên một chút để tránh cây nếu màn hình hẹp */
+            transform: translateY(-20px); 
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4em;
+            margin: 0;
+            background: linear-gradient(to right, #ff9a9e, #fad0c4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(255, 105, 180, 0.4);
+        }
+
+        p { color: #eee; font-size: 1.2em; margin-top: 15px; }
+
+        /* --- KHUNG ẢNH GỖ --- */
+        .frame {
+            position: relative;
+            width: 130px; height: 160px;
+            /* Tạo hiệu ứng vân gỗ bằng gradient */
+            background: repeating-linear-gradient(
+                45deg,
+                #6b4423,
+                #6b4423 10px,
+                #855e42 10px,
+                #855e42 20px
+            );
+            border: 6px solid #4a2e17; /* Viền gỗ đậm */
+            padding: 5px; /* Bo viền trong */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.7), inset 0 0 10px rgba(0,0,0,0.5);
+            transform-origin: top center;
+            animation: swing 3s ease-in-out infinite alternate;
+            border-radius: 4px;
+        }
+
+        /* Dây thừng treo */
+        .frame::before {
+            content: ''; position: absolute; top: -80px; left: 50%;
+            width: 3px; height: 80px; 
+            /* Màu dây thừng */
+            background: repeating-linear-gradient(to bottom, #c2b280, #c2b280 5px, #a09060 5px, #a09060 10px);
+            transform: translateX(-50%);
+        }
+        
+        .frame:hover { transform: scale(1.1) rotate(0deg) !important; z-index: 100; animation-play-state: paused; }
+        
+        .frame img { 
+            width: 100%; height: 100%; object-fit: cover;
+            border: 2px solid #d4c4a8; /* Viền sáng bên trong ảnh */
+        }
+        
+        .frame:nth-child(1) { animation-delay: 0s; transform: rotate(-2deg); }
+        .frame:nth-child(2) { animation-delay: 1s; transform: rotate(1deg); }
+        .frame:nth-child(3) { animation-delay: 0.5s; transform: rotate(2deg); }
+
+        @keyframes swing { from {transform: rotate(3deg);} to {transform: rotate(-3deg);} }
+
+        @media(max-width: 768px) {
+            .top-section { flex-direction: column; }
+            .greeting-card { margin: 0; transform: translateY(0); margin-top: 350px; /* Đẩy xuống dưới cây trên mobile */ }
+            .bottom-section { flex-wrap: wrap; padding-bottom: 50px;}
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas-world"></canvas>
+
+    <div class="ui-layer">
+        <div class="top-section">
+            <div class="left-col-spacer"></div>
+            <div class="right-col-content">
+                <div class="greeting-card">
+                    <h1>Merry Christmas</h1>
+                    <p>Chúc cục cưng của toi có một mùa giáng sinh thiệt dui doẻ bên tôi nhoé.</p>
+                    <p>Chúc mừng lần này chúng ta đã coá thể ăng noel mụt cách chính thức hêhhe, chúc boàaa eo eooo đào nhiều hơn nhóooo.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-section">
+            <div class="frame"><img src="anh1.jpeg"></div>
+            <div class="frame"><img src="anh2.png"></div>
+            <div class="frame"><img src="anh3.jpeg"></div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas-world');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+        let snow = [];
+
+        // CẤU HÌNH MỚI
+        const TREE_COUNT = 10000; // 10,000 điểm
+        const TREE_COLORS = ['#FFC0CB', '#FFB6C1', '#FF69B4', '#FF1493', '#DB7093', '#FFFFFF'];
+        
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        function initTree() {
+            particles = [];
+            for(let i=0; i<TREE_COUNT; i++) {
+                const h = Math.random(); 
+                const r_max_at_h = 200 * h; // Tán cây rộng hơn chút (200px)
+                const angle = Math.random() * Math.PI * 2;
+                const r = r_max_at_h * Math.sqrt(Math.random());
+
+                const x = r * Math.cos(angle);
+                const z = r * Math.sin(angle);
+                // Tăng chiều cao cây lên 550px (thay vì 450px cũ)
+                const y = h * 550 - 275; 
+
+                particles.push({
+                    x: x, y: y, z: z,
+                    color: TREE_COLORS[Math.floor(Math.random() * TREE_COLORS.length)],
+                    // Kích thước nhỏ lại để mịn hơn khi mật độ cao
+                    size: Math.random() * 1.8 + 0.5, 
+                    blinkOffset: Math.random() * 100,
+                    // Tốc độ nhấp nháy nhanh hơn chút
+                    blinkSpeed: 0.1 + Math.random() * 0.2 
+                });
+            }
+        }
+
+        function initSnow() {
+            snow = [];
+            for(let i=0; i<250; i++) { // Nhiều tuyết hơn
+                snow.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: Math.random() * 3 + 1,
+                    speed: Math.random() * 2 + 1
+                });
+            }
+        }
+
+        initTree();
+        initSnow();
+
+        function animate() {
+            // Vẽ nền
+            const gradient = ctx.createRadialGradient(width/2, height, 0, width/2, height, height);
+            gradient.addColorStop(0, "#2a1a21"); // Nền hơi ám hồng tối
+            gradient.addColorStop(1, "#090A0F");
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+
+            const time = Date.now() / 1000;
+
+            // VỊ TRÍ TÂM CÂY MỚI (Thấp hơn)
+            const cx = width * 0.25; 
+            const cy = height * 0.45; // Dời xuống 65% chiều cao màn hình (cũ là 55%)
+
+            // Vẽ 10000 điểm
+            particles.forEach(p => {
+                // Hiệu ứng lung linh: Dao động từ 0.3 (mờ) đến 1.0 (sáng rực)
+                let alpha = 0.3 + 0.7 * Math.abs(Math.sin(time * p.blinkSpeed + p.blinkOffset));
+                
+                // Xoay nhẹ cây
+                const rotSpeed = 0.15;
+                const rx = p.x * Math.cos(time * rotSpeed) - p.z * Math.sin(time * rotSpeed);
+                // const rz = p.x * Math.sin(time * rotSpeed) + p.z * Math.cos(time * rotSpeed); // Không cần thiết cho 2D projection đơn giản
+                
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                // Vẽ hình tròn nhỏ
+                ctx.arc(cx + rx, cy + p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Vẽ ngôi sao (Dời vị trí theo tâm cây mới)
+            ctx.globalAlpha = 1;
+            // Đỉnh cây là -275, nên sao nằm khoảng -290 so với tâm
+            drawStar(cx, cy - 290, 5, 35, 18); 
+
+            // Vẽ tuyết
+            ctx.fillStyle = "#FFF";
+            snow.forEach(s => {
+                s.y += s.speed;
+                if(s.y > height) s.y = -10;
+                ctx.globalAlpha = 0.6;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        // Hàm vẽ ngôi sao phát sáng
+        function drawStar(cx, cy, spikes, outerRadius, innerRadius) {
+            let rot = Math.PI / 2 * 3;
+            let x = cx; let y = cy; let step = Math.PI / spikes;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - outerRadius);
+            for (let i = 0; i < spikes; i++) {
+                x = cx + Math.cos(rot) * outerRadius; y = cy + Math.sin(rot) * outerRadius;
+                ctx.lineTo(x, y); rot += step;
+                x = cx + Math.cos(rot) * innerRadius; y = cy + Math.sin(rot) * innerRadius;
+                ctx.lineTo(x, y); rot += step;
+            }
+            ctx.lineTo(cx, cy - outerRadius);
+            ctx.closePath();
+            ctx.fillStyle = '#FFD700';
+            ctx.shadowColor = '#FFD700';
+            ctx.shadowBlur = 30; // Phát sáng mạnh hơn
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+
+        animate();
+    </script>
+</body>
+</html>
